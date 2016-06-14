@@ -114,7 +114,7 @@ public final class PIDTestGui implements ChangeListener {
                 break;
             }
             case "kd": {
-                kd = value;
+                kd = value / 1000.0;
                 break;
             }
         }
@@ -122,8 +122,8 @@ public final class PIDTestGui implements ChangeListener {
         performSimulation();
     }
 
-    private final LineChart chart = new LineChart("PID controller test", "Simulation Data");
-    private final ControlGui controls = new ControlGui();
+    private final LineChart chart;
+    private final ControlGui controls;
 
     private double kp = 0.0;
     private double ki = 0.0;
@@ -133,8 +133,13 @@ public final class PIDTestGui implements ChangeListener {
 
     final double height = 4;
     final double radius = 1;
-    final double maxFillRate = 1;
+    final double maxFillRate = 0.05;
     final double desiredFillLevel = 0.75;
+
+    private PIDTestGui() {
+        chart = new LineChart("PID controller test", "Simulation Data");
+        controls = new ControlGui();
+    }
 
     private void start() {
         chart.pack();
@@ -168,7 +173,7 @@ public final class PIDTestGui implements ChangeListener {
 
         for (double t = 0; t < simulationTime; t += timestep) {
             final double fillLevel = tank.update(timestep);
-            final double newFillRate = controller.update(fillLevel);
+            final double newFillRate = controller.update(timestep, fillLevel);
             tank.setFillRate(newFillRate);
 
             final FixedMillisecond time = new FixedMillisecond((long) (t * 1000));
