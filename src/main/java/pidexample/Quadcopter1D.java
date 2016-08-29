@@ -284,7 +284,7 @@ public class Quadcopter1D implements FirstOrderDifferentialEquations, ChangeList
         thrust = 0;
         controller.setSetpoint(z0);
 
-        try (BufferedWriter output = new BufferedWriter(new FileWriter("c:/Users/Adriano/Desktop/data.csv"))) {
+        try (BufferedWriter output = new BufferedWriter(new FileWriter("build/data.csv"))) {
             integrator.addStepHandler(new StepHandler() {
                 @Override
                 public void init(double t0, double[] y0, double t) {
